@@ -15,7 +15,7 @@ object ServiceSwaggerModule extends SwaggerModule {
     val info = new Info()
       .contact(new Contact().name("$name$").email("$maintainer_email$"))
       .description(
-        "**$name$** - $service_description$.")
+        "**$name$** - $app_description$.")
       .version(serviceVersion())
       .title("$name$ API")
 

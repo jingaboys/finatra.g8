@@ -1,6 +1,6 @@
 # App
 
-A templated Finatra application. See [forthy/finatra.g8](https://github.com/forthy/finatra.g8).
+A templated Finatra application. See [jingaboys/finatra.g8](https://github.com/jingaboys/finatra.g8).
 
 # Build
 

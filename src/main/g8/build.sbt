@@ -14,6 +14,8 @@ scalaVersion := "$scala_version$"
 
 fork in run := true
 
+cancelable in Global := true
+
 resolvers += Resolver.sonatypeRepo("releases")
 
 resolvers += "maven.twttr.com" at "https://maven.twttr.com"
@@ -136,7 +138,7 @@ bashScriptExtraDefines ++= Seq("""addJava "-Dnetworkaddress.cache.ttl=60"""",
                                """addJava "-XX:+UseG1GC"""",
                                """addJava "-XX:+UseStringDeduplication"""")
 bashScriptExtraDefines ++= Seq("""addApp "-log.level=$"$"${LOG_LEVEL:-INFO}"""",
-                               """addApp "-swagger.docs.endpoint=$"$"${SWAGGER_DOC_PATH:-/$name;format="norm,word"$/docs}"""",
+                               """addApp "-swagger.docs.endpoint=$"$"${/$name;format="norm,word"$/docs}"""",
                                s"""addApp "-service.version=$"$"${version.value}"""")
 
 val gitHeadCode = SettingKey[String]("git-head-hash", "The commit hash code of HEAD")
