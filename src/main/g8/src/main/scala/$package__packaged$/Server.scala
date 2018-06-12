@@ -10,7 +10,6 @@ import com.twitter.finatra.http.HttpServer
 import com.twitter.finatra.http.filters.{CommonFilters, LoggingMDCFilter, TraceIdMDCFilter}
 import com.twitter.finatra.http.routing.HttpRouter
 import com.twitter.util.Var
-import perfolation._
 
 object ServerMain extends Server
 
@@ -19,7 +18,7 @@ class Server extends HttpServer {
 
   override protected def modules = Seq(ServiceSwaggerModule)
 
-  override def defaultFinatraHttpPort = getConfig[String]("FINATRA_HTTP_PORT").fold(":9999")(x => p":$"$"$x")
+  override def defaultFinatraHttpPort = s""":${getConfig[String]("FINATRA_HTTP_PORT").getOrElse("9999")}"""
   override val name                   = "$package$ $name;format="Camel"$"
 
   override def configureHttp(router: HttpRouter): Unit = {

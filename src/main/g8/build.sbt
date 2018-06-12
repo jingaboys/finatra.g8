@@ -1,5 +1,4 @@
 import sbt.Keys._
-import com.amazonaws.regions.{Region, Regions}
 import com.typesafe.sbt.packager.docker._
 import com.typesafe.sbt.packager.docker.DockerPlugin.autoImport.DockerAlias
 
@@ -20,27 +19,15 @@ resolvers += Resolver.sonatypeRepo("releases")
 resolvers += "maven.twttr.com" at "https://maven.twttr.com"
 
 enablePlugins(JavaAppPackaging,
-              DockerPlugin,
               GitVersioning,
-              GitBranchPrompt,
-              DockerContainerPlugin,
-              MicrositesPlugin,
-              EcrPlugin)
+              GitBranchPrompt)
 
 initialCommands in console := """
                 | import com.twitter.util.{Future, FuturePool, Await}
                 |""".stripMargin
 
-coverageHighlighting := true
-
-scapegoatVersion in ThisBuild := "1.3.5"
-
 scalafmtConfig := Some(file(".scalafmt.conf"))
 scalafmtOnCompile := true
-
-autoCompilerPlugins := true
-addCompilerPlugin("com.criteo.socco" %% "socco-plugin" % "0.1.9")
-addCompilerPlugin("com.olegpy"       %% "better-monadic-for" % "0.2.4")
 
 lazy val versions = new {
   val finatra        = "18.5.0"
@@ -49,25 +36,11 @@ lazy val versions = new {
   val mockito        = "1.10.19"
   val scalatest      = "3.0.5"
   val junitInterface = "0.11"
-  val dockerItScala  = "0.9.6"
   val scalaUri       = "0.4.16"
-  val hamsters       = "2.6.0"
-  val fluentdScala   = "0.2.5"
   val swaggerFinatra = "18.4.0"
-  val wireMock       = "2.18.0"
-  val catbird        = "18.5.0"
-  val scalaErrors    = "1.2"
-  val perfolation    = "1.0.2"
 }
 
 libraryDependencies ++= Seq(
-  "com.outr"                     %% "perfolation"                    % versions.perfolation,
-  "com.github.mehmetakiftutuncu" %% "errors"                         % versions.scalaErrors,
-  "io.catbird"                   %% "catbird-finagle"                % versions.catbird,
-  "com.github.tomakehurst"       % "wiremock"                        % versions.wireMock,
-  "com.jakehschwartz"            % "finatra-swagger_2.12"            % versions.swaggerFinatra,
-  "eu.inn"                       %% "fluentd-scala"                  % versions.fluentdScala,
-  "io.github.scala-hamsters"     %% "hamsters"                       % versions.hamsters,
   "com.netaporter"               %% "scala-uri"                      % versions.scalaUri,
   "com.twitter"                  %% "finatra-http"                   % versions.finatra,
   "com.twitter"                  %% "finatra-httpclient"             % versions.finatra,
@@ -87,11 +60,10 @@ libraryDependencies ++= Seq(
   "com.twitter"                  %% "inject-app"                     % versions.finatra % "test" classifier "tests",
   "com.twitter"                  %% "inject-core"                    % versions.finatra % "test" classifier "tests",
   "com.twitter"                  %% "inject-modules"                 % versions.finatra % "test" classifier "tests",
+  "com.jakehschwartz"            % "finatra-swagger_2.12"            % versions.swaggerFinatra,
   "org.mockito"                  % "mockito-core"                    % versions.mockito        % "test",
   "org.scalatest"                %% "scalatest"                      % versions.scalatest      % "test",
-  "com.novocode"                 % "junit-interface"                 % versions.junitInterface % "test",
-  "com.whisk"                    %% "docker-testkit-scalatest"       % versions.dockerItScala  % "test",
-  "com.whisk"                    %% "docker-testkit-impl-spotify"    % versions.dockerItScala  % "test"
+  "com.novocode"                 % "junit-interface"                 % versions.junitInterface % "test"
 )
 
 testOptions += Tests.Argument(TestFrameworks.JUnit, "-q", "-v")
@@ -154,14 +126,7 @@ scalacOptions ++= Seq(
     "-Ybackend-parallelism",
     s"$"$"${sys.runtime.availableProcessors() * 2}",
     "-Ybackend-worker-queue",
-    "8",
-    "-P:bm4:no-filtering:y",
-    "-P:bm4:no-map-id:y",
-    "-P:bm4:no-tupling:y",
-    "-P:socco:out:./target/socco",
-    "-P:socco:package_com.twitter.util:https://twitter.github.io/util/docs/",
-    "-P:socco:package_scala:http://www.scala-lang.org/api/current/",
-    "-P:socco:package_com.htc.vr8.:file://./target/scala-2.12/api/"
+    "8"
 )
 
 // bashScriptExtraDefines += """addJava "-Dnetworkaddress.cache.ttl=60""""
@@ -176,52 +141,3 @@ bashScriptExtraDefines ++= Seq("""addApp "-log.level=$"$"${LOG_LEVEL:-INFO}"""",
 
 val gitHeadCode = SettingKey[String]("git-head-hash", "The commit hash code of HEAD")
 gitHeadCode := git.gitHeadCommit.value.map { sha => s"$"$"${sha.take(7)}" }.getOrElse("na")
-
-dockerVersion := Some(DockerVersion(17, 9, 1, Some("ce")))
-defaultLinuxInstallLocation in Docker := "/opt/$docker_package_name$"
-packageName in Docker := "vr/$docker_package_name$"
-dockerBaseImage := "openjdk:8-jre-slim"
-version in Docker := s"$"$"${if (gitHeadCode.value != "na") s"$"$"${version.value}_$"$"${gitHeadCode.value}" else version.value}"
-maintainer in Docker := "$maintainer_name$ <$maintainer_email$>"
-dockerExposedPorts := Seq(9999, 9990)
-dockerAlias := DockerAlias(None,
-                           None,
-                           (packageName in Docker).value,
-                           Some((version in Docker).value))
-dockerUpdateLatest := false
-dockerBuildOptions := Seq(
-  "--force-rm",
-  "-t",
-  s"$"$"${(packageName in Docker).value}:$"$"${(version in Docker).value}",
-  "--squash",
-  "--no-cache",
-  "--pull"
-)
-dockerCommands := dockerCommands.value.take(1) ++ Seq(
-  Cmd("LABEL", s"version=$"$"${version.value}"),
-  Cmd("LABEL", "owner_team=$owner_team$"),
-  Cmd(
-    "ENV",
-    "DOCKER_CONTENT_TRUST=1",
-    "SERVICE_NAME=$docker_package_name$ SERVICE_TAGS=$service_tags$")
-) ++ dockerCommands.value.drop(1)
-
-// AWS ECR support
-region           in Ecr := Region.getRegion(Regions.US_WEST_2)
-repositoryName   in Ecr := (packageName in Docker).value
-localDockerImage in Ecr := (packageName in Docker).value + ":" + (version in Docker).value
-repositoryTags   in Ecr := Seq((version in Docker).value)
-push in Ecr := ((push in Ecr) dependsOn (publishLocal in Docker, createRepository in Ecr, login in Ecr)).value
-publish in Docker := (push in Ecr).value
-
-// MicroSites
-micrositeName := "$name$"
-micrositeBaseUrl := "$microsite_base_url$"
-micrositeDocumentationUrl := "/$microsite_base_url$/docs"
-micrositeAuthor := "$maintainer_name$"
-micrositeOrganizationHomepage := "http://www.htc.com"
-micrositeGitHostingService := Other("HICHub")
-micrositeGitHostingUrl := "https://hichub.htc.com"
-
-// License report style
-licenseReportStyleRules := Some("table, th, td {border: 1px solid grey;}")

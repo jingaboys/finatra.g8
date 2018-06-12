@@ -13,7 +13,7 @@ object ServiceSwaggerModule extends SwaggerModule {
   def swagger: Swagger = {
 
     val info = new Info()
-      .contact(new Contact().name("$maintainer_name$").email("$maintainer_email$"))
+      .contact(new Contact().name("$name$").email("$maintainer_email$"))
       .description(
         "**$name$** - $service_description$.")
       .version(serviceVersion())
