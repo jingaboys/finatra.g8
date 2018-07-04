@@ -7,11 +7,15 @@ We are going to implement an app to fetch the weather at the specified location.
 1. Run the app, make sure you can open the webpage at localhost:8888
 2. Uncomment the fetching code in `api.js` and remove the stubbed data, see that the app is not working anymore
 3. Hard-code the same data we had in `api.js` into the `MainController.scala`, check that the app is now working (although with a stubbed data)
-4. Implement the actual data fetching
+4. Implement the actual data fetching. You'll want to:
+    1. create an HTTP client to fetch the data from the api
+    2. define the datastructures for our responses
+    3. parse the json response from the API, put it into our datastructures
+    4. serve the corresponding datastructures from `MainController`
 
 ## Suggestions
 
-* Use https://openweathermap.org/current for getting real time forecast information
+* Use https://openweathermap.org/current for getting real time forecast information. We recommend using the following api method: api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}
     * Note: in order to be able to make requests to openweathermap you need to obtain an
     API KEY by registering on the website.
     The key must be provided in the request parameters (along with the rest of the params required by the API).
