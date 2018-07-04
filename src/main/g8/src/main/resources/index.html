@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My weather forcast app</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/forecast.css">
+
+</head>
+<body>
+    <div class="container container-table">
+        <div class="row vertical-center-row">
+            <div class="content-container text-center col-md-8 col-md-offset-8">
+                <div class="col-lg-12">
+                    <div class="alert alert-success" id="forecast-result" role="alert"></div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="location" placeholder="Location">
+                        <span class="input-group-btn">
+                            <button class="btn btn-secondary" id="forcast-button" type="button" onclick="getWeather()">🌤 Show me the weather!️ ☔️</button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/api.js"></script>
+</body>
+</html>

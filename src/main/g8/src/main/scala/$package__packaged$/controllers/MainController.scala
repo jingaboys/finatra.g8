@@ -10,11 +10,17 @@ import io.swagger.models.Swagger
 class MainController @Inject()(s: Swagger) extends SwaggerController {
   implicit protected val swagger = s
 
-  getWithDoc("/") { o =>
-    o.summary("Acquiring greetings message")
-      .tag("Greetings")
-      .responseWith(200, "Hello message")
+  get("/:*") { request: Request =>
+    response.ok.fileOrIndex(
+      request.params("*"),
+      "index.html")
+  }
+
+  getWithDoc("/weather.json") { o =>
+    o.summary("Acquiring the weather data")
+      .tag("Weather")
+      .responseWith(200, "Weather data json")
   } { request: Request =>
-    response.ok.json(Map("message" -> "success"))
+    response.ok.json(Map("weather" -> "data"))
   }
 }

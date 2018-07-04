@@ -1,0 +1,23 @@
+body {
+    background-image: url("https://images.unsplash.com/photo-1501854140801-50d01698950b?ixlib=rb-0.3.5&q=99&fm=jpg&crop=entropy&cs=tinysrgb&w=2048&fit=max&s=57cb1a2f500a7ac0f99ea3f256446ad9");
+}
+
+html, body, .container-table {
+    height: 100%;
+}
+
+.content-container {
+	margin: 0 auto;
+}
+
+.container-table {
+    display: table;
+}
+.vertical-center-row {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+#forecast-result {
+    visibility: hidden;
+}

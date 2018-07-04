@@ -1,6 +1,26 @@
-# App
+# Geekettes weather app
 
-A templated Finatra application. See [jingaboys/finatra.g8](https://github.com/jingaboys/finatra.g8).
+We are going to implement an app to fetch the weather at the specified location.
+
+## Steps
+
+1. Run the app, make sure you can open the webpage at localhost:8888
+2. Uncomment the fetching code in `api.js` and remove the stubbed data, see that the app is not working anymore
+3. Hard-code the same data we had in `api.js` into the `MainController.scala`, check that the app is now working (although with a stubbed data)
+4. Implement the actual data fetching
+
+## Suggestions
+
+* Use https://openweathermap.org/current for getting real time forecast information
+    * Note: in order to be able to make requests to openweathermap you need to obtain an
+    API KEY by registering on the website.
+    The key must be provided in the request parameters (along with the rest of the params required by the API).
+    * Read the documentation of the forecast API. You can find useful information on how to
+    make the requests and what parameters to provide in the request to get the weather in
+    Celsius degrees or Fahrenheit.
+
+* Google Maps API might be a good place to get geo coordinates for the location provided in the input.
+e.g: http://maps.googleapis.com/maps/api/geocode/json?address=London
 
 # Build
 
@@ -23,60 +43,3 @@ From an SBT console:
 ```
 
 This will run your application in a forked JVM, reloading it whenever files change locally.
-
-## Regenerate project site
-
-This project use [sbt-microsites](https://47deg.github.io/sbt-microsites/) to generate a project website.
-
-The site's root directory is in the `<project root directory>/src/main/tut`.
-
-From an SBT console:
-
-```
-sbt clean makeMicrosite
-```
-
-Then go to `<project root directory>/target/site`, then:
-
-```
-jekyll server
-```
-
-to publish the project website locally.
-
-**You need to install Jekyll first!**
-
-## Elsewhere
-
-Finatra is a standlone Java application. You can build and package this application in any way you choose (e.g. sbt-assembly).
-
-To make this process as simple as possible, the project template includes [sbt/sbt-native-packager](https://github.com/sbt/sbt-native-packager). This allows you to generate:
-
-* A docker image
-* A linux package
-* A Redhat package (`rpm`)
-* A Debian package
-* A Windows installer (`msi`)
-* A native package (via `javapackager`)
-
-For full details, see [sbt-native-packger's docs](http://www.scala-sbt.org/sbt-native-packager/formats/index.html)
-
-## Docker
-
-As an example, publishing this application to Docker locally is a cinch.
-
-```
-sbt docker:publishLocal
-```
-
-Check out the full sbt-native-packager documentation for all configuration options.
-
-When this completes, run the image:
-
-```
-docker run $(docker images -a -q | head -1)
-```
-
-<kbd>CTRL</kbd>+<kbd>C</kbd> to kill the container.
-
-The native packager's docker plugin gets you up and running in seconds. For longer term development, you'll probably find a `Dockerfile` to be a more maintainable solution.
