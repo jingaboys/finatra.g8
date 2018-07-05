@@ -12,7 +12,7 @@ function getWeather() {
     }).then((weatherResultJson) => {
         var forecastResult = document.getElementById("forecast-result")
         forecastResult.style.visibility = "visible"
-        forecastResult.innerHTML = `In <strong>${suburb}</strong> (${mylocation.lat}, ${mylocation.lng}) the weather is <strong>${weatherResultJson.currently.summary}</strong> and the temperature is <strong>${weatherResultJson.currently.temperature}</strong> degrees Celsius.`
+        forecastResult.innerHTML = `In <strong>${location}</strong> the weather is <strong>${weatherResultJson.currently.summary}</strong> and the temperature is <strong>${weatherResultJson.currently.temperature}</strong> degrees Celsius.`
     })
     */
 
